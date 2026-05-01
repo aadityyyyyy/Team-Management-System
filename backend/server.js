@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 const authRoutes = require('./routes/authRoutes');
 const projectRoutes = require('./routes/projectRoutes');
@@ -19,6 +20,12 @@ app.use('/api/tasks', taskRoutes);
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Something went wrong!' });
+});
+
+// Serve frontend
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
 const PORT = process.env.PORT || 5000;
